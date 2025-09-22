@@ -12,7 +12,7 @@ using WebAPI_simple.Data;
 namespace BookStoreApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250915093727_book")]
+    [Migration("20250917082758_book")]
     partial class book
     {
         /// <inheritdoc />

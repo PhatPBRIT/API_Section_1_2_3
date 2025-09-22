@@ -1,57 +1,64 @@
-﻿
-using BookStoreApi.Models.Domain;
-using Microsoft.AspNetCore.Authorization;
+﻿using BookStoreApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebAPI_simple.Data;
-
-
-
-
+using BookStoreApi.Models.DTOs;
+using System.ComponentModel.DataAnnotations;
 namespace BookStoreApi.Controllers
 {
-    [Authorize]
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class AuthorsController : ControllerBase
     {
-        private readonly AppDbContext _db;
-        public AuthorsController(AppDbContext db) => _db = db;
+        private readonly IAuthorRepository _authorRepo;
 
-        [HttpGet]
-        public Task<List<Author>> Get() => _db.Authors.ToListAsync();
-
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Author>> Get(int id)
+        public AuthorsController(IAuthorRepository authorRepo)
         {
-            var a = await _db.Authors.FindAsync(id);
-            return a is null ? NotFound() : Ok(a);
+            _authorRepo = authorRepo;
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Create(Author a)
+        // GET: api/authors/getAllAuthor
+        [HttpGet("getAllAuthor")]
+        public IActionResult GetAllAuthor()
         {
-            _db.Authors.Add(a);
-            await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = a.Id }, a);
+            var result = _authorRepo.GellAllAuthors();
+            return Ok(result);
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, Author a)
+        // GET: api/authors/getAuthorById/5
+        [HttpGet("getAuthorById/{id:int}")]
+        public IActionResult GetAuthorById([FromRoute] int id)
         {
-            if (id != a.Id) return BadRequest();
-            _db.Entry(a).State = EntityState.Modified;
-            await _db.SaveChangesAsync();
-            return NoContent();
+            var result = _authorRepo.GetAuthorById(id);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id)
+        // POST: api/authors/addAuthor
+        [HttpPost("addAuthor")]
+        public IActionResult AddAuthor([FromBody] AddAuthorRequestDTO request)
         {
-            var a = await _db.Authors.FindAsync(id);
-            if (a is null) return NotFound();
-            _db.Authors.Remove(a);
-            await _db.SaveChangesAsync();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var created = _authorRepo.AddAuthor(request);
+            return Ok(created);
+        }
+
+        // PUT: api/authors/updateAuthorById/5
+        [HttpPut("updateAuthorById/{id:int}")]
+        public IActionResult UpdateAuthorById([FromRoute] int id, [FromBody] AuthorNoIdDTO request)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var updated = _authorRepo.UpdateAuthorById(id, request);
+            if (updated == null) return NotFound();
+            return Ok(updated);
+        }
+
+        // DELETE: api/authors/deleteAuthorById/5
+        [HttpDelete("deleteAuthorById/{id:int}")]
+        public IActionResult DeleteAuthorById([FromRoute] int id)
+        {
+            var deleted = _authorRepo.DeleteAuthorById(id);
+            if (deleted == null) return NotFound();
             return NoContent();
         }
     }

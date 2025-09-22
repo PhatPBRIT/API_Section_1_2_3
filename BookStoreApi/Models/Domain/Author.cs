@@ -11,3 +11,4 @@ namespace BookStoreApi.Models.Domain
         public List<Book_Author> BookAuthors { get; set; } = new List<Book_Author>();
     }
 }
+    

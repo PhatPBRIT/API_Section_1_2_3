@@ -1,164 +1,124 @@
-﻿
-using BookStoreApi.Models.Domain;
+﻿using BookStoreApi.Filters;
 using BookStoreApi.Models.DTOs;
-using Microsoft.AspNetCore.Http;
+using BookStoreApi.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WebAPI_simple.Data;
-using WebAPI_simple.Models.Domain;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-
-namespace WebAPI.Controllers
+namespace WebAPI_simple.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class BooksController : ControllerBase
     {
         private readonly AppDbContext _dbContext;
-        public BooksController(AppDbContext dbContext)
+        private readonly IBookRepository _bookRepository;
+
+        public BooksController(AppDbContext dbContext, IBookRepository bookRepository)
         {
             _dbContext = dbContext;
+            _bookRepository = bookRepository;
         }
-        // GET http://localhost:port/api/get-all-books
+
         [HttpGet("get-all-books")]
         public IActionResult GetAll()
         {
-            // Get Data from Database - Domain Model
-            var allBooksDomain = _dbContext.Books;
-
-            // Map domain models to DTOs
-            var allBooksDTO = allBooksDomain.Select(Book => new BookWithAuthorAndPublisherDTO()
-            {
-                Id = Book.Id,
-                Title = Book.Title,
-                Description = Book.Description,
-                IsRead = Book.IsRead,
-                DateRead = Book.IsRead ? Book.DateRead.Value : null,
-                Rate = Book.IsRead ? Book.Rate.Value : null,
-                Genre = Book.Genre,
-                CoverUrl = Book.CoverUrl,
-                PublisherName = Book.Publisher.Name,
-                AuthorNames = Book.Book_Authors.Select(n => n.Author.FullName).ToList()
-            }).ToList();
-
-            // return DTOs
-            return Ok(allBooksDTO);
+            // Sử dụng repository pattern
+            var allBooks = _bookRepository.GetAllBooks();
+            return Ok(allBooks);
         }
-        [HttpGet]
-        [Route("get-book-by-id/{id}")]
+
+        [HttpGet("get-book-by-id/{id}")]
         public IActionResult GetBookById([FromRoute] int id)
         {
-            // Get book Domain model from Db
-            var bookWithDomain = _dbContext.Books.Where(n => n.Id == id);
-
-            if (bookWithDomain == null)
+            var bookWithIdDTO = _bookRepository.GetBookById(id);
+            if (bookWithIdDTO == null)
             {
                 return NotFound();
             }
-
-            // Map Domain Model to DTOs
-            var bookWithIdDTO = bookWithDomain.Select(book => new BookWithAuthorAndPublisherDTO()
-            {
-                Id = book.Id,
-                Title = book.Title,
-                Description = book.Description,
-                IsRead = book.IsRead,
-                DateRead = book.DateRead,
-                Rate = book.Rate,
-                Genre = book.Genre,
-                CoverUrl = book.CoverUrl,
-                PublisherName = book.Publisher.Name,
-                AuthorNames = book.Book_Authors.Select(n => n.Author.FullName).ToList()
-            });
-
             return Ok(bookWithIdDTO);
         }
+
         [HttpPost("add-book")]
+        [ValidateModel]
+        //[Authorize(Roles = "Write")]
         public IActionResult AddBook([FromBody] addBookRequestDTO addBookRequestDTO)
         {
-            // Map DTO to Domain Model
-#pragma warning disable CS8601 // Possible null reference assignment.
-            var bookDomainModel = new Book
+            var publisherExists = _dbContext.Publishers.Any(p => p.Id == addBookRequestDTO.PublisherID);
+            if (!publisherExists)
             {
-                Title = addBookRequestDTO.Title,
-                Description = addBookRequestDTO.Description,
-                IsRead = addBookRequestDTO.IsRead,
-                DateRead = addBookRequestDTO.DateRead,
-                Rate = addBookRequestDTO.Rate,
-                Genre = addBookRequestDTO.Genre,
-                CoverUrl = addBookRequestDTO.CoverUrl,
-                DateAdded = addBookRequestDTO.DateAdded,
-                PublisherID = addBookRequestDTO.PublisherID
-            };
-#pragma warning restore CS8601 // Possible null reference assignment.
-
-            // Use Domain Model to create Book
-            _dbContext.Books.Add(bookDomainModel);
-            _dbContext.SaveChanges();
-
-            foreach (var id in addBookRequestDTO.AuthorIds)
-            {
-                var _book_author = new Book_Author()
-                {
-                    BookId = bookDomainModel.Id,
-                    AuthorId = id
-                };
-
-                _dbContext.Books_Authors.Add(_book_author);
+                ModelState.AddModelError(nameof(addBookRequestDTO.PublisherID),
+                    "PublisherID không tồn tại trong bảng Publishers.");
+                return BadRequest(ModelState);
             }
-            _dbContext.SaveChanges();
 
-            return Ok();
+            if (ValidateAddBook(addBookRequestDTO))
+            {
+                var bookAdd = _bookRepository.AddBook(addBookRequestDTO);
+                return Ok(bookAdd);
+            }
+             return BadRequest(ModelState);
         }
+        [HttpPost("and-book")]
+        public IActionResult AddBookNew([FromBody] addBookRequestDTO addBookRequestDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                var bookAdd = _bookRepository.AddBook(addBookRequestDTO);
+                return Ok(bookAdd);
+            }
+            return BadRequest(ModelState);
+        }
+
         [HttpPut("update-book-by-id/{id}")]
-        public IActionResult UpdateBookById(int id, [FromBody] addBookRequestDTO bookDTO)
+        public IActionResult UpdateBookById([FromRoute] int id, [FromBody] addBookRequestDTO bookDTO)
         {
-            var bookDomain = _dbContext.Books.FirstOrDefault(n => n.Id == id);
-            if (bookDomain != null)
+            var updateBook = _bookRepository.UpdateBookById(id, bookDTO);
+            if (updateBook == null)
             {
-                bookDomain.Title = bookDTO.Title;
-                bookDomain.Description = bookDTO.Description;
-                bookDomain.IsRead = bookDTO.IsRead;
-                bookDomain.DateRead = bookDTO.DateRead;
-                bookDomain.Rate = bookDTO.Rate;
-                bookDomain.Genre = bookDTO.Genre;
-                bookDomain.CoverUrl = bookDTO.CoverUrl;
-                bookDomain.DateAdded = bookDTO.DateAdded;
-                bookDomain.PublisherID = bookDTO.PublisherID;
-
-                _dbContext.SaveChanges();
+                return NotFound();
             }
-
-            var authorDomain = _dbContext.Books_Authors.Where(a => a.BookId == id).ToList();
-            if (authorDomain != null)
-            {
-                _dbContext.Books_Authors.RemoveRange(authorDomain);
-                _dbContext.SaveChanges();
-            }
-
-            foreach (var authorid in bookDTO.AuthorIds)
-            {
-                var _book_author = new Book_Author()
-                {
-                    BookId = id,
-                    AuthorId = authorid
-                };
-                _dbContext.Books_Authors.Add(_book_author);
-            }
-            _dbContext.SaveChanges();
-
-            return Ok(bookDTO);
+            return Ok(updateBook);
         }
+
         [HttpDelete("delete-book-by-id/{id}")]
-        public IActionResult DeleteBookById(int id)
+        public IActionResult DeleteBookById([FromRoute] int id)
         {
-            var bookDoamin = _dbContext.Books.FirstOrDefault(n => n.Id == id);
-            if (bookDoamin != null)
+            var deleteBook = _bookRepository.DeleteBookById(id);
+            if (deleteBook == null)
             {
-                _dbContext.Books.Remove(bookDoamin);
-                _dbContext.SaveChanges();
+                return NotFound();
             }
-            return Ok();
+            return Ok(deleteBook);
         }
+        #region Private methods
+        private bool ValidateAddBook(addBookRequestDTO addBookRequestDTO)
+        {
+            if (addBookRequestDTO == null)
+            {
+                ModelState.AddModelError(nameof(addBookRequestDTO), $"Please add book data");
+                return false;
+            }
+            // kiem tra Description NotNull
+            if (string.IsNullOrEmpty(addBookRequestDTO.Description))
+            {
+                ModelState.AddModelError(nameof(addBookRequestDTO.Description),
+               $"{nameof(addBookRequestDTO.Description)} cannot be null");
+            }
+            // kiem tra rating (0,5) 
+            if (addBookRequestDTO.Rate < 0 || addBookRequestDTO.Rate > 5)
+            {
+                ModelState.AddModelError(nameof(addBookRequestDTO.Rate),
+               $"{nameof(addBookRequestDTO.Rate)} cannot be less than 0 and more than 5");
+            }
+            if (ModelState.ErrorCount > 0)
+            {
+                return false;
+            }
+            return true;
+        }
+        
     }
 }
+#endregion
