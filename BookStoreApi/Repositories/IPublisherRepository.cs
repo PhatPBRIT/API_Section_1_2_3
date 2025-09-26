@@ -11,6 +11,7 @@ namespace BookStoreApi.Repositories
         PublisherNoIdDTO UpdatePublisherById(int id, PublisherNoIdDTO publisherNoIdDTO);
         PublisherDTO? DeletePublisherById(int id);
         bool ExistsByName(string name);
+        bool ExistsById(int id);
         bool ExistsByNameExcludingId(string name, int excludeId);
     }
 }

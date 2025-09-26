@@ -1,42 +1,52 @@
-﻿using BookStoreApi.Repositories;
+﻿using BookStoreApi.CustomActionFilter;
+using BookStoreApi.Filters;
+using BookStoreApi.Models.DTOs;
+using BookStoreApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI_simple.Data;
 
 namespace WebAPI_simple.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookAuthorsController : ControllerBase
+    public class Book_AuthorController : ControllerBase
     {
-        private readonly IBookAuthorsRepository _bookAuthorsRepository;
+        private readonly AppDbContext _dbContext;
+        private readonly IBookAuthorsRepository _book_AuthorRepository;
 
-        public BookAuthorsController(IBookAuthorsRepository bookAuthorsRepository)
+        public Book_AuthorController(AppDbContext dbContext, IBookAuthorsRepository book_AuthorRepository)
         {
-            _bookAuthorsRepository = bookAuthorsRepository;
+            _dbContext = dbContext;
+            _book_AuthorRepository = book_AuthorRepository;
+
         }
-
-        [HttpPost("add")]
-        public IActionResult AddBookAuthor([FromQuery] int bookId, [FromQuery] int authorId)
+        [HttpPost("add-book_author")]
+        [ValidateModel]
+        public IActionResult AddBook_Author([FromBody] AddBookAuthorRequestDTO addBook_AuthorRequestDTO)
         {
-            // Kiểm tra và thêm bản ghi
-            if (!_bookAuthorsRepository.BookExists(bookId))
+            if (ValidateAddBook_Author(addBook_AuthorRequestDTO))
             {
-                ModelState.AddModelError("bookId", $"Book with ID {bookId} does not exist.");
-                return BadRequest(ModelState);
+                var book_authorAdd = _book_AuthorRepository.AddBook_Author(addBook_AuthorRequestDTO);
+                return Ok(book_authorAdd);
+            }
+            else return BadRequest(ModelState);
+        }
+        private bool ValidateAddBook_Author(AddBookAuthorRequestDTO addBook_AuthorRequestDTO)
+        {
+            if (!_book_AuthorRepository.ExistsByBookId(addBook_AuthorRequestDTO.BookId))
+            {
+                ModelState.AddModelError(nameof(addBook_AuthorRequestDTO), $"BookId does not exist in Books table");
             }
 
-            if (!_bookAuthorsRepository.AuthorExists(authorId))
+            if (!_book_AuthorRepository.ExistsByAuthorId(addBook_AuthorRequestDTO.AuthorId))
             {
-                ModelState.AddModelError("authorId", $"Author with ID {authorId} does not exist.");
-                return BadRequest(ModelState);
+                ModelState.AddModelError(nameof(addBook_AuthorRequestDTO), $"AuthorId does not exist in Authors table");
             }
-
-            var success = _bookAuthorsRepository.AddBookAuthor(bookId, authorId);
-            if (success)
+            if (ModelState.ErrorCount > 0)
             {
-                return Ok(new { message = "Book-Author relationship added successfully." });
+                return false;
             }
-
-            return StatusCode(500, "Failed to add Book-Author relationship.");
+            return true;
         }
     }
 }

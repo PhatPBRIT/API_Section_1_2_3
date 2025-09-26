@@ -1,4 +1,5 @@
-﻿using BookStoreApi.Repositories;
+﻿using BookStoreApi.Models.DTOs;
+using BookStoreApi.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using WebAPI_simple.Data;
@@ -9,39 +10,34 @@ namespace BookStoreApi.Repositories
     public class BookAuthorsRepository : IBookAuthorsRepository
     {
         private readonly AppDbContext _dbContext;
-
-        public BookAuthorsRepository(AppDbContext  dbContext)
+        public BookAuthorsRepository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public bool BookExists(int bookId)
-            => _dbContext.Books.Any(b => b.Id == bookId);
-
-        public bool AuthorExists(int authorId)
-            => _dbContext.Authors.Any(a => a.Id == authorId);
-
-        public bool AddBookAuthor(int bookId, int authorId)
+        public AddBookAuthorRequestDTO AddBook_Author(AddBookAuthorRequestDTO addBook_AuthorRequestDTO)
         {
-            if (!BookExists(bookId))
+            var bookAuthorDomain = new Book_Author
             {
-                return false; 
-            }
-
-            if (!AuthorExists(authorId))
-            {
-                return false; 
-            }
-
-            var bookAuthor = new BookAuthor
-            {
-                BookId = bookId,
-                AuthorId = authorId
+                BookId = addBook_AuthorRequestDTO.BookId,
+                AuthorId = addBook_AuthorRequestDTO.AuthorId,
             };
-
-            _dbContext.Books_Authors.Add(bookAuthor);
+            _dbContext.Books_Authors.Add(bookAuthorDomain);
             _dbContext.SaveChanges();
-            return true;
+            return addBook_AuthorRequestDTO;
+        }
+        public bool ExistsByBookId(int bookId)
+        {
+            return _dbContext.Books.Any(b => b.Id == bookId);
+        }
+        public bool ExistsByAuthorId(int authorId)
+        {
+            return _dbContext.Authors.Any(a => a.Id == authorId);
+        }
+
+        public bool Exists(int bookId, int authorId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-
-namespace BookStoreApi.Filters
+namespace BookStoreApi.CustomActionFilter
 {
-    public class ValidateModelAttribute : ActionFilterAttribute
+    public class ValidateModelAttribute: ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {

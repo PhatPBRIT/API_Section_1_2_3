@@ -92,5 +92,10 @@ namespace BookAPIStore.Repositories
                 Name = entity.Name
             };
         }
+
+        public bool ExistsById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

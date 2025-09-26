@@ -1,9 +1,8 @@
-
 using BookAPIStore.Repositories;
+using BookStoreApi.CustomActionFilter;
 using BookStoreApi.Repositories;
 using Microsoft.EntityFrameworkCore;
 using WebAPI_simple.Data;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -17,6 +16,8 @@ builder.Services.AddScoped<IBookRepository, SQLBookRepository>();
 builder.Services.AddScoped<IAuthorRepository, SQLAuthorRepository>();
 builder.Services.AddScoped<IPublisherRepository, SQLPublisherRepository>();
 builder.Services.AddScoped<IBookAuthorsRepository, BookAuthorsRepository>();
+builder.Services.AddScoped<ValidateModelAttribute>();
+
 
 var app = builder.Build();
 

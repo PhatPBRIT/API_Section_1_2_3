@@ -1,4 +1,5 @@
-﻿using BookStoreApi.Filters;
+﻿using BookStoreApi.CustomActionFilter;
+using BookStoreApi.Filters;
 using BookStoreApi.Models.DTOs;
 using BookStoreApi.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -41,7 +42,7 @@ namespace WebAPI_simple.Controllers
         }
 
         [HttpPost("add-book")]
-        [ValidateModel]
+        [ValidateModelAttribute]
         //[Authorize(Roles = "Write")]
         public IActionResult AddBook([FromBody] addBookRequestDTO addBookRequestDTO)
         {

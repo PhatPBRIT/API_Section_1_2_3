@@ -1,65 +1,104 @@
-﻿using BookStoreApi.Repositories;
-using Microsoft.AspNetCore.Mvc;
+﻿using BookStoreApi.CustomActionFilter;
+using BookStoreApi.Filters;
 using BookStoreApi.Models.DTOs;
+using BookStoreApi.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using WebAPI_simple.Data;
 namespace BookStoreApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthorsController : ControllerBase
+    public class AuthorController : ControllerBase
     {
-        private readonly IAuthorRepository _authorRepo;
+        private readonly AppDbContext _dbContext;
+        private readonly IAuthorRepository _authorRepository;
 
-        public AuthorsController(IAuthorRepository authorRepo)
+        public AuthorController(AppDbContext dbContext, IAuthorRepository authorRepository)
         {
-            _authorRepo = authorRepo;
+            _dbContext = dbContext;
+            _authorRepository = authorRepository;
         }
 
-        // GET: api/authors/getAllAuthor
-        [HttpGet("getAllAuthor")]
-        public IActionResult GetAllAuthor()
+        [HttpGet("get-all-author")]
+        public IActionResult GetAll()
         {
-            var result = _authorRepo.GellAllAuthors();
-            return Ok(result);
+            var allAuthors = _authorRepository.GellAllAuthors();
+            return Ok(allAuthors);
         }
 
-        // GET: api/authors/getAuthorById/5
-        [HttpGet("getAuthorById/{id:int}")]
+        [HttpGet]
+        [Route("get-author-by-id/{id}")]
         public IActionResult GetAuthorById([FromRoute] int id)
         {
-            var result = _authorRepo.GetAuthorById(id);
-            if (result == null) return NotFound();
-            return Ok(result);
+            var AuthorWithIdDTO = _authorRepository.GetAuthorById(id);
+            return Ok(AuthorWithIdDTO);
+        }
+        [HttpPost("add-Author")]
+        [ValidateModelAttribute]
+        public IActionResult AddAuthor([FromBody] AddAuthorRequestDTO addauthorRequestDTO)
+        {
+            if (ValidateAddAuthor(addauthorRequestDTO))
+            {
+                var authorAdd = _authorRepository.AddAuthor(addauthorRequestDTO);
+                return Ok(authorAdd);
+            }
+            else return BadRequest(ModelState);
+
         }
 
-        // POST: api/authors/addAuthor
-        [HttpPost("addAuthor")]
-        public IActionResult AddAuthor([FromBody] AddAuthorRequestDTO request)
+        [HttpPut("update-Author-by-id/{id}")]
+        public IActionResult UpdateAuthorById(int id, [FromBody] AuthorNoIdDTO authorNoIdDTO)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var created = _authorRepo.AddAuthor(request);
-            return Ok(created);
+            var updateauthor = _authorRepository.UpdateAuthorById(id, authorNoIdDTO);
+            return Ok(updateauthor);
         }
-
-        // PUT: api/authors/updateAuthorById/5
-        [HttpPut("updateAuthorById/{id:int}")]
-        public IActionResult UpdateAuthorById([FromRoute] int id, [FromBody] AuthorNoIdDTO request)
+        [HttpDelete("delete-author-by-id/{id}")]
+        [ServiceFilter(typeof(ValidateAuthorCanDeleteAttribute))]
+        public IActionResult DeleteAuthorById(int id)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var updated = _authorRepo.UpdateAuthorById(id, request);
-            if (updated == null) return NotFound();
-            return Ok(updated);
+            if (ValidateDeleteAuthor(id))
+            {
+                var deleteauthor = _authorRepository.DeleteAuthorById(id);
+                return Ok(deleteauthor);
+            }
+            else return BadRequest(ModelState);
         }
-
-        // DELETE: api/authors/deleteAuthorById/5
-        [HttpDelete("deleteAuthorById/{id:int}")]
-        public IActionResult DeleteAuthorById([FromRoute] int id)
+        private bool ValidateAddAuthor(AddAuthorRequestDTO addAuthorRequestDTO)
         {
-            var deleted = _authorRepo.DeleteAuthorById(id);
-            if (deleted == null) return NotFound();
-            return NoContent();
+            if (string.IsNullOrWhiteSpace(addAuthorRequestDTO.FullName))
+            {
+                ModelState.AddModelError(nameof(addAuthorRequestDTO.FullName), $"{nameof(addAuthorRequestDTO.FullName)} cannot be empty");
+            }
+            else if (addAuthorRequestDTO.FullName.Length < 3)
+            {
+                ModelState.AddModelError(nameof(addAuthorRequestDTO.FullName), $"{nameof(addAuthorRequestDTO.FullName)} must be at least 3 characters long");
+            }
+            if (ModelState.ErrorCount > 0)
+            {
+                return false;
+            }
+            return true;
+        }
+        private bool ValidateDeleteAuthor(int id)
+        {
+            var author = _dbContext.Authors.FirstOrDefault(a => a.Id == id);
+            if (author == null)
+            {
+                ModelState.AddModelError("AuthorId", $"Author with ID {id} does not exist.");
+            }
+
+            // Kiểm tra liên kết qua bảng Book_Authors
+            var hasLinks = _dbContext.Books_Authors.Any(ba => ba.AuthorId == id);
+            if (hasLinks)
+            {
+                ModelState.AddModelError("AuthorId", $"Cannot delete Author with ID {id} because it is linked to one or more Books via Book_Authors.");
+            }
+            if (ModelState.ErrorCount > 0)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

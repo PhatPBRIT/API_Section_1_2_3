@@ -1,9 +1,13 @@
-﻿namespace BookStoreApi.Repositories
+﻿using BookStoreApi.Models.DTOs;
+using WebAPI_simple.Models.Domain;
+
+namespace BookStoreApi.Repositories
 {
     public interface IBookAuthorsRepository
     {
-        bool BookExists(int bookId);
-        bool AuthorExists(int authorId);
-        bool AddBookAuthor(int bookId, int authorId);
+        AddBookAuthorRequestDTO AddBook_Author(AddBookAuthorRequestDTO addBook_AuthorRequestDTO);
+        public bool ExistsByBookId(int bookId);
+        public bool ExistsByAuthorId(int authorId);
+        bool Exists(int bookId, int authorId);
     }
 }

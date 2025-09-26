@@ -4,85 +4,96 @@ using BookStoreApi.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI_simple.Data;
 
 namespace BookStoreApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PublishersController : ControllerBase
+    public class PublisherController : ControllerBase
     {
-        private readonly IPublisherRepository _publisherRepo;
+        private readonly AppDbContext _dbContext;
+        private readonly IPublisherRepository _publisherRepository;
 
-        public PublishersController(IPublisherRepository publisherRepo)
+        public PublisherController(AppDbContext dbContext, IPublisherRepository publisherRepository)
         {
-            _publisherRepo = publisherRepo;
+            _dbContext = dbContext;
+            _publisherRepository = publisherRepository;
         }
 
-        // GET: api/publishers/getAllPublisher
-        [HttpGet("getAllPublisher")]
-        public IActionResult GetAllPublisher()
+        [HttpGet("get-all-Publisher")]
+        public IActionResult GetAll()
         {
-            var result = _publisherRepo.GetAllPublishers();
-            return Ok(result);
+            var allPublishers = _publisherRepository.GetAllPublishers();
+            return Ok(allPublishers);
         }
 
-        // GET: api/publishers/getPublisherById/5
-        [HttpGet("getPublisherById/{id:int}")]
+        [HttpGet]
+        [Route("get-publisher-by-id/{id}")]
         public IActionResult GetPublisherById([FromRoute] int id)
         {
-            var result = _publisherRepo.GetPublisherById(id);
-            if (result == null) return NotFound();
-            return Ok(result);
+            var PublisherWithIdDTO = _publisherRepository.GetPublisherById(id);
+            return Ok(PublisherWithIdDTO);
+        }
+        [HttpPost("add-Publisher")]
+        public IActionResult AddPublisher([FromBody] AddPublisherRequestDTO addpublisherRequestDTO)
+        {
+            if (ValidateAddPublisher(addpublisherRequestDTO))
+            {
+                var PublisherAdd = _publisherRepository.AddPublisher(addpublisherRequestDTO);
+                return Ok(PublisherAdd);
+            }
+            else return BadRequest(ModelState);
+
         }
 
-        // POST: api/publishers/addPublisher
-        [HttpPost("addPublisher")]
-        //[ValidateModel]
-        //[Authorize(Roles = "Write")]
-        public IActionResult AddPublisher([FromBody] AddPublisherRequestDTO request)
+        [HttpPut("update-Publisher-by-id/{id}")]
+        public IActionResult UpdatePublisherById(int id, [FromBody] PublisherNoIdDTO publisherNoIdDTO)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            // Check trùng tên
-            if (_publisherRepo.ExistsByName(request.Name))
+            var updatepublisher = _publisherRepository.UpdatePublisherById(id, publisherNoIdDTO);
+            return Ok(updatepublisher);
+        }
+        [HttpDelete("delete-publisher-by-id/{id}")]
+        public IActionResult DeletePublisherById(int id)
+        {
+            if (ValidateDeletePublisher(id))
             {
-                ModelState.AddModelError(nameof(request.Name), "Publisher name already exists.");
-                return BadRequest(ModelState);
-                // return Conflict(new { error = "Publisher name already exists." });
+                var deletepublisher = _publisherRepository.DeletePublisherById(id);
+                return Ok(deletepublisher);
+            }
+            else return BadRequest(ModelState);
+
+        }
+        private bool ValidateAddPublisher(AddPublisherRequestDTO addPublisherRequestDTO)
+        {
+            if (!string.IsNullOrWhiteSpace(addPublisherRequestDTO.Name) && _publisherRepository.ExistsByName(addPublisherRequestDTO.Name))
+            {
+                ModelState.AddModelError(nameof(addPublisherRequestDTO.Name), $"{nameof(addPublisherRequestDTO.Name)} already exists");
+            }
+            if (ModelState.ErrorCount > 0)
+            {
+                return false;
+            }
+            return true;
+        }
+        private bool ValidateDeletePublisher(int id)
+        {
+            var publisher = _dbContext.Publishers.FirstOrDefault(p => p.Id == id);
+            if (publisher == null)
+            {
+                ModelState.AddModelError(nameof(id), $"Publisher with ID {id} does not exist.");
             }
 
-            var created = _publisherRepo.AddPublisher(request);
-            return Ok(created);
-        }
-
-        // PUT: api/publishers/updatePublisherById/5
-        [HttpPut("updatePublisherById/{id:int}")]
-        public IActionResult UpdatePublisherById([FromRoute] int id, [FromBody] PublisherNoIdDTO request)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            // Check trùng tên (trừ chính nó ra)
-            if (_publisherRepo.ExistsByNameExcludingId(request.Name, id))
+            var hasBooks = _dbContext.Books.Any(b => b.PublisherID == id);
+            if (hasBooks)
             {
-                ModelState.AddModelError(nameof(request.Name), "Publisher name already exists.");
-                return BadRequest(ModelState);
-                // return Conflict(new { error = "Publisher name already exists." });
+                ModelState.AddModelError(nameof(id), $"Cannot delete Publisher with ID {id} because it has related Books.");
             }
-
-            var updated = _publisherRepo.UpdatePublisherById(id, request);
-            if (updated == null) return NotFound();
-            return Ok(updated);
-        }
-
-        // DELETE: api/publishers/deletePublisherById/5
-        [HttpDelete("deletePublisherById/{id:int}")]
-        public IActionResult DeletePublisherById([FromRoute] int id)
-        {
-            var deleted = _publisherRepo.DeletePublisherById(id);
-            if (deleted == null) return NotFound();
-            return NoContent();
+            if (ModelState.ErrorCount > 0)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

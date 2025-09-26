@@ -5,10 +5,10 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Authors/getAllAuthor": {
+    "/api/Author/get-all-author": {
       "get": {
         "tags": [
-          "Authors"
+          "Author"
         ],
         "responses": {
           "200": {
@@ -17,10 +17,10 @@
         }
       }
     },
-    "/api/Authors/getAuthorById/{id}": {
+    "/api/Author/get-author-by-id/{id}": {
       "get": {
         "tags": [
-          "Authors"
+          "Author"
         ],
         "parameters": [
           {
@@ -40,10 +40,10 @@
         }
       }
     },
-    "/api/Authors/addAuthor": {
+    "/api/Author/add-Author": {
       "post": {
         "tags": [
-          "Authors"
+          "Author"
         ],
         "requestBody": {
           "content": {
@@ -71,10 +71,10 @@
         }
       }
     },
-    "/api/Authors/updateAuthorById/{id}": {
+    "/api/Author/update-Author-by-id/{id}": {
       "put": {
         "tags": [
-          "Authors"
+          "Author"
         ],
         "parameters": [
           {
@@ -113,10 +113,10 @@
         }
       }
     },
-    "/api/Authors/deleteAuthorById/{id}": {
+    "/api/Author/delete-author-by-id/{id}": {
       "delete": {
         "tags": [
-          "Authors"
+          "Author"
         ],
         "parameters": [
           {
@@ -136,29 +136,30 @@
         }
       }
     },
-    "/api/BookAuthors/add": {
+    "/api/Book_Author/add-book_author": {
       "post": {
         "tags": [
-          "BookAuthors"
+          "Book_Author"
         ],
-        "parameters": [
-          {
-            "name": "bookId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "authorId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddBookAuthorRequestDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddBookAuthorRequestDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddBookAuthorRequestDTO"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -328,10 +329,10 @@
         }
       }
     },
-    "/api/Publishers/getAllPublisher": {
+    "/api/Publisher/get-all-Publisher": {
       "get": {
         "tags": [
-          "Publishers"
+          "Publisher"
         ],
         "responses": {
           "200": {
@@ -340,10 +341,10 @@
         }
       }
     },
-    "/api/Publishers/getPublisherById/{id}": {
+    "/api/Publisher/get-publisher-by-id/{id}": {
       "get": {
         "tags": [
-          "Publishers"
+          "Publisher"
         ],
         "parameters": [
           {
@@ -363,10 +364,10 @@
         }
       }
     },
-    "/api/Publishers/addPublisher": {
+    "/api/Publisher/add-Publisher": {
       "post": {
         "tags": [
-          "Publishers"
+          "Publisher"
         ],
         "requestBody": {
           "content": {
@@ -394,10 +395,10 @@
         }
       }
     },
-    "/api/Publishers/updatePublisherById/{id}": {
+    "/api/Publisher/update-Publisher-by-id/{id}": {
       "put": {
         "tags": [
-          "Publishers"
+          "Publisher"
         ],
         "parameters": [
           {
@@ -436,10 +437,10 @@
         }
       }
     },
-    "/api/Publishers/deletePublisherById/{id}": {
+    "/api/Publisher/delete-publisher-by-id/{id}": {
       "delete": {
         "tags": [
-          "Publishers"
+          "Publisher"
         ],
         "parameters": [
           {
@@ -510,6 +511,28 @@
           "fullName": {
             "minLength": 3,
             "type": "string"
+          },
+          "bookId": {
+            "nullable": true,
+            "readOnly": true
+          },
+          "authorId": {
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddBookAuthorRequestDTO": {
+        "type": "object",
+        "properties": {
+          "bookId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "authorId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

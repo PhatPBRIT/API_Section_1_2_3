@@ -1,14 +1,14 @@
 [
   {
-    "ContainingType": "BookStoreApi.Controllers.AuthorsController",
+    "ContainingType": "BookStoreApi.Controllers.AuthorController",
     "Method": "AddAuthor",
-    "RelativePath": "api/Authors/addAuthor",
+    "RelativePath": "api/Author/add-Author",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
+        "Name": "addauthorRequestDTO",
         "Type": "BookStoreApi.Models.DTOs.AddAuthorRequestDTO",
         "IsRequired": true
       }
@@ -16,9 +16,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookStoreApi.Controllers.AuthorsController",
+    "ContainingType": "BookStoreApi.Controllers.AuthorController",
     "Method": "DeleteAuthorById",
-    "RelativePath": "api/Authors/deleteAuthorById/{id}",
+    "RelativePath": "api/Author/delete-author-by-id/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -32,9 +32,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookStoreApi.Controllers.AuthorsController",
-    "Method": "GetAllAuthor",
-    "RelativePath": "api/Authors/getAllAuthor",
+    "ContainingType": "BookStoreApi.Controllers.AuthorController",
+    "Method": "GetAll",
+    "RelativePath": "api/Author/get-all-author",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -42,9 +42,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookStoreApi.Controllers.AuthorsController",
+    "ContainingType": "BookStoreApi.Controllers.AuthorController",
     "Method": "GetAuthorById",
-    "RelativePath": "api/Authors/getAuthorById/{id}",
+    "RelativePath": "api/Author/get-author-by-id/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -58,9 +58,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookStoreApi.Controllers.AuthorsController",
+    "ContainingType": "BookStoreApi.Controllers.AuthorController",
     "Method": "UpdateAuthorById",
-    "RelativePath": "api/Authors/updateAuthorById/{id}",
+    "RelativePath": "api/Author/update-Author-by-id/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -71,7 +71,7 @@
         "IsRequired": true
       },
       {
-        "Name": "request",
+        "Name": "authorNoIdDTO",
         "Type": "BookStoreApi.Models.DTOs.AuthorNoIdDTO",
         "IsRequired": true
       }
@@ -79,22 +79,17 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "WebAPI_simple.Controllers.BookAuthorsController",
-    "Method": "AddBookAuthor",
-    "RelativePath": "api/BookAuthors/add",
+    "ContainingType": "WebAPI_simple.Controllers.Book_AuthorController",
+    "Method": "AddBook_Author",
+    "RelativePath": "api/Book_Author/add-book_author",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "bookId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "authorId",
-        "Type": "System.Int32",
-        "IsRequired": false
+        "Name": "addBook_AuthorRequestDTO",
+        "Type": "BookStoreApi.Models.DTOs.AddBookAuthorRequestDTO",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -195,15 +190,15 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookStoreApi.Controllers.PublishersController",
+    "ContainingType": "BookStoreApi.Controllers.PublisherController",
     "Method": "AddPublisher",
-    "RelativePath": "api/Publishers/addPublisher",
+    "RelativePath": "api/Publisher/add-Publisher",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
+        "Name": "addpublisherRequestDTO",
         "Type": "BookStoreApi.Models.DTOs.AddPublisherRequestDTO",
         "IsRequired": true
       }
@@ -211,9 +206,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookStoreApi.Controllers.PublishersController",
+    "ContainingType": "BookStoreApi.Controllers.PublisherController",
     "Method": "DeletePublisherById",
-    "RelativePath": "api/Publishers/deletePublisherById/{id}",
+    "RelativePath": "api/Publisher/delete-publisher-by-id/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -227,9 +222,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookStoreApi.Controllers.PublishersController",
-    "Method": "GetAllPublisher",
-    "RelativePath": "api/Publishers/getAllPublisher",
+    "ContainingType": "BookStoreApi.Controllers.PublisherController",
+    "Method": "GetAll",
+    "RelativePath": "api/Publisher/get-all-Publisher",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -237,9 +232,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookStoreApi.Controllers.PublishersController",
+    "ContainingType": "BookStoreApi.Controllers.PublisherController",
     "Method": "GetPublisherById",
-    "RelativePath": "api/Publishers/getPublisherById/{id}",
+    "RelativePath": "api/Publisher/get-publisher-by-id/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -253,9 +248,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookStoreApi.Controllers.PublishersController",
+    "ContainingType": "BookStoreApi.Controllers.PublisherController",
     "Method": "UpdatePublisherById",
-    "RelativePath": "api/Publishers/updatePublisherById/{id}",
+    "RelativePath": "api/Publisher/update-Publisher-by-id/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -266,7 +261,7 @@
         "IsRequired": true
       },
       {
-        "Name": "request",
+        "Name": "publisherNoIdDTO",
         "Type": "BookStoreApi.Models.DTOs.PublisherNoIdDTO",
         "IsRequired": true
       }
