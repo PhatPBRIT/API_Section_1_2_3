@@ -1,0 +1,55 @@
+2025-09-29 10:44:11.634 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/api/Books/get-all-books?pageNumber=1&pageSize=100 - null null
+2025-09-29 10:44:11.701 +07:00 [INF] Executing endpoint 'WebAPI_simple.Controllers.BooksController.GetAll (BookStoreApi)'
+2025-09-29 10:44:11.705 +07:00 [INF] Route matched with {action = "GetAll", controller = "Books"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetAll(System.String, System.String, System.String, Boolean, Int32, Int32) on controller WebAPI_simple.Controllers.BooksController (BookStoreApi).
+2025-09-29 10:44:11.719 +07:00 [INF] GetAll Book Action method was invoked
+2025-09-29 10:44:11.720 +07:00 [WRN] This is a warning log
+2025-09-29 10:44:11.721 +07:00 [ERR] This is a error log
+2025-09-29 10:44:11.811 +07:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Book'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-09-29 10:44:11.839 +07:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-09-29 10:44:11.840 +07:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-09-29 10:44:11.969 +07:00 [INF] Executed DbCommand (17ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[Title], [t].[Description], [t].[IsRead], CASE
+    WHEN [t].[IsRead] = CAST(1 AS bit) THEN [t].[DateRead]
+    ELSE NULL
+END, CASE
+    WHEN [t].[IsRead] = CAST(1 AS bit) THEN [t].[Rate]
+    ELSE NULL
+END, [t].[Genre], [t].[CoverUrl], [p].[Name], [p].[Id], [t0].[FullName], [t0].[Id], [t0].[Id0]
+FROM (
+    SELECT [b].[Id], [b].[CoverUrl], [b].[DateRead], [b].[Description], [b].[Genre], [b].[IsRead], [b].[PublisherID], [b].[Rate], [b].[Title]
+    FROM [Books] AS [b]
+    ORDER BY (SELECT 1)
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+INNER JOIN [Publishers] AS [p] ON [t].[PublisherID] = [p].[Id]
+LEFT JOIN (
+    SELECT [a].[FullName], [b0].[Id], [a].[Id] AS [Id0], [b0].[BookId]
+    FROM [Books_Authors] AS [b0]
+    INNER JOIN [Authors] AS [a] ON [b0].[AuthorId] = [a].[Id]
+) AS [t0] ON [t].[Id] = [t0].[BookId]
+ORDER BY [t].[Id], [p].[Id], [t0].[Id]
+2025-09-29 10:44:11.991 +07:00 [INF] Finished GetAllBook request with data [{"Id":1,"Title":"Harry Potter and the Sorcerer\u0027s Stone","Description":"The first book in the Harry Potter series.","IsRead":true,"DateRead":"2023-01-15T00:00:00","Rate":5,"Genre":"Fantasy","CoverUrl":"http://example.com/cover1.jpg","DateAdded":"0001-01-01T00:00:00","PublisherName":"Penguin Random House","AuthorNames":["J.K. Rowling"]},{"Id":2,"Title":"The Shining","Description":"A psychological horror novel.","IsRead":true,"DateRead":"2023-02-20T00:00:00","Rate":4,"Genre":"Horror","CoverUrl":"http://example.com/cover2.jpg","DateAdded":"0001-01-01T00:00:00","PublisherName":"HarperCollins","AuthorNames":["Stephen King"]},{"Id":3,"Title":"And Then There Were None","Description":"A classic mystery novel.","IsRead":true,"DateRead":"2023-03-25T00:00:00","Rate":5,"Genre":"Mystery","CoverUrl":"http://example.com/cover3.jpg","DateAdded":"0001-01-01T00:00:00","PublisherName":"Simon \u0026 Schuster","AuthorNames":["string"]},{"Id":4,"Title":"A Game of Thrones","Description":"The first novel in A Song of Ice and Fire series.","IsRead":false,"DateRead":null,"Rate":null,"Genre":"Fantasy","CoverUrl":"http://example.com/cover4.jpg","DateAdded":"0001-01-01T00:00:00","PublisherName":"Macmillan Publishers","AuthorNames":["George R.R. Martin"]},{"Id":5,"Title":"Norwegian Wood","Description":"A coming-of-age novel.","IsRead":true,"DateRead":"2023-05-30T00:00:00","Rate":4,"Genre":"Fiction","CoverUrl":"http://example.com/cover5.jpg","DateAdded":"0001-01-01T00:00:00","PublisherName":"Hachette Livre","AuthorNames":["Haruki Murakami"]},{"Id":6,"Title":"stringstri","Description":"string","IsRead":true,"DateRead":"2025-09-22T01:39:15.78","Rate":0,"Genre":"string","CoverUrl":"string","DateAdded":"0001-01-01T00:00:00","PublisherName":"Hachette Livre","AuthorNames":[]},{"Id":7,"Title":"stringstri","Description":"string","IsRead":true,"DateRead":"2025-09-22T01:42:54.473","Rate":0,"Genre":"string","CoverUrl":"string","DateAdded":"0001-01-01T00:00:00","PublisherName":"Hachette Livre","AuthorNames":[]}]
+2025-09-29 10:44:11.994 +07:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[BookStoreApi.Models.DTOs.BookWithAuthorAndPublisherDTO, BookStoreApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-09-29 10:44:11.997 +07:00 [INF] Executed action WebAPI_simple.Controllers.BooksController.GetAll (BookStoreApi) in 289.8554ms
+2025-09-29 10:44:11.998 +07:00 [INF] Executed endpoint 'WebAPI_simple.Controllers.BooksController.GetAll (BookStoreApi)'
+2025-09-29 10:44:11.998 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/api/Books/get-all-books?pageNumber=1&pageSize=100 - 200 null application/json; charset=utf-8 364.0509ms
+2025-09-29 10:44:58.738 +07:00 [INF] Request starting HTTP/2 DELETE https://localhost:7200/api/Books/delete-book-by-id/5 - null null
+2025-09-29 10:44:58.757 +07:00 [INF] Executing endpoint 'WebAPI_simple.Controllers.BooksController.DeleteBookById (BookStoreApi)'
+2025-09-29 10:44:58.760 +07:00 [INF] Route matched with {action = "DeleteBookById", controller = "Books"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult DeleteBookById(Int32) on controller WebAPI_simple.Controllers.BooksController (BookStoreApi).
+2025-09-29 10:44:58.774 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[CoverUrl], [b].[DateAdded], [b].[DateRead], [b].[Description], [b].[Genre], [b].[IsRead], [b].[Price], [b].[PublisherID], [b].[Rate], [b].[Title]
+FROM [Books] AS [b]
+WHERE [b].[Id] = @__id_0
+2025-09-29 10:44:58.815 +07:00 [ERR] An exception occurred while iterating over the results of a query for context type 'WebAPI_simple.Data.AppDbContext'.
+System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at Microsoft.Data.SqlClient.SqlBuffer.ThrowIfNull()
+   at Microsoft.Data.SqlClient.SqlBuffer.get_Decimal()
+   at Microsoft.Data.SqlClient.SqlDataReader.GetDecimal(Int32 i)
+   at lambda_method303(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at Microsoft.Data.SqlClient.SqlBuffer.ThrowIfNull()
+   at Microsoft.Data.SqlClient.SqlBuffer.get_Decimal()
+   at Microsoft.Data.SqlClient.SqlDataReader.GetDecimal(Int32 i)
+   at lambda_method303(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()

@@ -4,6 +4,7 @@ using BookStoreApi.Models.DTOs;
 using BookStoreApi.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using WebAPI_simple.Data;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -16,21 +17,31 @@ namespace WebAPI_simple.Controllers
     {
         private readonly AppDbContext _dbContext;
         private readonly IBookRepository _bookRepository;
-
-        public BooksController(AppDbContext dbContext, IBookRepository bookRepository)
+        private readonly ILogger<BooksController> _logger;
+        public BooksController(AppDbContext dbContext, IBookRepository bookRepository,ILogger<BooksController> logger)
         {
             _dbContext = dbContext;
             _bookRepository = bookRepository;
+            _logger = logger;
         }
 
+        //get all books
+        // GET: /api/Books/get-all-books?filterOn=Name&filterQuery=Track
         [HttpGet("get-all-books")]
-        [Authorize(Roles ="Read")]
-        public IActionResult GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery,
-        [FromQuery] string? sortBy, [FromQuery] bool isAscending,[FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 100)
+        [Authorize(Roles = "Read")]
+        public IActionResult GetAll([FromQuery] string? filterOn, [FromQuery] string?
+       filterQuery,
+        [FromQuery] string? sortBy, [FromQuery] bool isAscending,
+        [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 100)
         {
+            _logger.LogInformation("GetAll Book Action method was invoked");
+            _logger.LogWarning("This is a warning log");
+            _logger.LogError("This is a error log");
             // su dung reposity pattern 
             var allBooks = _bookRepository.GetAllBooks(filterOn, filterQuery, sortBy,
            isAscending, pageNumber, pageSize);
+            //debug
+            _logger.LogInformation($"Finished GetAllBook request with data {JsonSerializer.Serialize(allBooks)}");
             return Ok(allBooks);
         }
 

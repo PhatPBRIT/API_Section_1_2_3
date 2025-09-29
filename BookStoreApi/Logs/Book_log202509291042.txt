@@ -1,0 +1,49 @@
+2025-09-29 10:42:19.059 +07:00 [INF] User profile is available. Using 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-09-29 10:42:19.374 +07:00 [INF] Now listening on: https://localhost:7200
+2025-09-29 10:42:19.375 +07:00 [INF] Now listening on: http://localhost:5134
+2025-09-29 10:42:19.652 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-09-29 10:42:19.654 +07:00 [INF] Hosting environment: Development
+2025-09-29 10:42:19.654 +07:00 [INF] Content root path: D:\TKW2\API\BookStoreApi\BookStoreApi
+2025-09-29 10:42:21.981 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/swagger/index.html - null null
+2025-09-29 10:42:22.318 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/_framework/aspnetcore-browser-refresh.js - null null
+2025-09-29 10:42:22.393 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/_framework/aspnetcore-browser-refresh.js - 200 13760 application/javascript; charset=utf-8 73.7667ms
+2025-09-29 10:42:22.452 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/swagger/index.html - 200 null text/html;charset=utf-8 488.7121ms
+2025-09-29 10:42:22.499 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/_framework/aspnetcore-browser-refresh.js - null null
+2025-09-29 10:42:22.502 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/_vs/browserLink - null null
+2025-09-29 10:42:22.531 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/_framework/aspnetcore-browser-refresh.js - 200 13760 application/javascript; charset=utf-8 29.7014ms
+2025-09-29 10:42:22.641 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/_vs/browserLink - 200 null text/javascript; charset=UTF-8 139.1975ms
+2025-09-29 10:42:22.816 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/swagger/v1/swagger.json - null null
+2025-09-29 10:42:22.958 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 142.3748ms
+2025-09-29 10:42:23.185 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/_framework/aspnetcore-browser-refresh.js - null null
+2025-09-29 10:42:23.189 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/_framework/aspnetcore-browser-refresh.js - 200 13760 application/javascript; charset=utf-8 3.1665ms
+2025-09-29 10:42:23.287 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/swagger/v1/swagger.json - null null
+2025-09-29 10:42:23.304 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 17.4026ms
+2025-09-29 10:42:23.376 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/swagger/v1/swagger.json - null null
+2025-09-29 10:42:23.389 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 13.715ms
+2025-09-29 10:42:36.625 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7200/api/User/Login - application/json 63
+2025-09-29 10:42:36.693 +07:00 [INF] Executing endpoint 'BookStoreApi.Controllers.UserController.Login (BookStoreApi)'
+2025-09-29 10:42:36.724 +07:00 [INF] Route matched with {action = "Login", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(BookStoreApi.Models.DTO.LoginRequestDTO) on controller BookStoreApi.Controllers.UserController (BookStoreApi).
+2025-09-29 10:42:38.002 +07:00 [INF] Executed DbCommand (51ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+2025-09-29 10:42:38.249 +07:00 [INF] Executed DbCommand (13ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @__userId_0
+2025-09-29 10:42:38.299 +07:00 [INF] Executing OkObjectResult, writing value of type 'BookStoreApi.Models.DTOs.LoginResponseDTO'.
+2025-09-29 10:42:38.308 +07:00 [INF] Executed action BookStoreApi.Controllers.UserController.Login (BookStoreApi) in 1577.3157ms
+2025-09-29 10:42:38.310 +07:00 [INF] Executed endpoint 'BookStoreApi.Controllers.UserController.Login (BookStoreApi)'
+2025-09-29 10:42:38.321 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7200/api/User/Login - 200 null application/json; charset=utf-8 1695.4015ms
+2025-09-29 10:42:49.379 +07:00 [INF] Request starting HTTP/2 POST https://localhost:7200/api/User/Login - application/json 64
+2025-09-29 10:42:49.386 +07:00 [INF] Executing endpoint 'BookStoreApi.Controllers.UserController.Login (BookStoreApi)'
+2025-09-29 10:42:49.387 +07:00 [INF] Route matched with {action = "Login", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(BookStoreApi.Models.DTO.LoginRequestDTO) on controller BookStoreApi.Controllers.UserController (BookStoreApi).
+2025-09-29 10:42:49.451 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[Email], [a].[EmailConfirmed], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+2025-09-29 10:42:49.454 +07:00 [INF] Executing BadRequestObjectResult, writing value of type 'System.String'.
+2025-09-29 10:42:49.456 +07:00 [INF] Executed action BookStoreApi.Controllers.UserController.Login (BookStoreApi) in 67.2862ms
+2025-09-29 10:42:49.458 +07:00 [INF] Executed endpoint 'BookStoreApi.Controllers.UserController.Login (BookStoreApi)'
+2025-09-29 10:42:49.459 +07:00 [INF] Request finished HTTP/2 POST https://localhost:7200/api/User/Login - 400 null text/plain; charset=utf-8 79.6034ms

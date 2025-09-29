@@ -8,8 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Serilog;
 using WebAPI_simple.Data;
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container. 
+var _logger = new LoggerConfiguration()
+    .WriteTo.Console()// ghi ra console 
+    .WriteTo.File("Logs/Book_log.txt", rollingInterval: RollingInterval.Minute) //ghi ra file lưu trong thư mục Logs 
+    .MinimumLevel.Information()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(_logger);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
