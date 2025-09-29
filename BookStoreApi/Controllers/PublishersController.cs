@@ -10,6 +10,7 @@ namespace BookStoreApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PublisherController : ControllerBase
     {
         private readonly AppDbContext _dbContext;

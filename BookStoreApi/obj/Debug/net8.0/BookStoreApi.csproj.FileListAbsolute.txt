@@ -289,3 +289,9 @@ D:\TKW2\API\BookStoreApi\BookStoreApi\obj\Debug\net8.0\refint\BookStoreApi.dll
 D:\TKW2\API\BookStoreApi\BookStoreApi\obj\Debug\net8.0\BookStoreApi.pdb
 D:\TKW2\API\BookStoreApi\BookStoreApi\obj\Debug\net8.0\BookStoreApi.genruntimeconfig.cache
 D:\TKW2\API\BookStoreApi\BookStoreApi\obj\Debug\net8.0\ref\BookStoreApi.dll
+D:\TKW2\API\BookStoreApi\BookStoreApi\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\TKW2\API\BookStoreApi\BookStoreApi\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+D:\TKW2\API\BookStoreApi\BookStoreApi\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+D:\TKW2\API\BookStoreApi\BookStoreApi\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+D:\TKW2\API\BookStoreApi\BookStoreApi\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
+D:\TKW2\API\BookStoreApi\BookStoreApi\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll

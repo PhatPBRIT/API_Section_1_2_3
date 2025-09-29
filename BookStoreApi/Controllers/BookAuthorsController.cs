@@ -2,6 +2,7 @@
 using BookStoreApi.Filters;
 using BookStoreApi.Models.DTOs;
 using BookStoreApi.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI_simple.Data;
 
@@ -9,6 +10,7 @@ namespace WebAPI_simple.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class Book_AuthorController : ControllerBase
     {
         private readonly AppDbContext _dbContext;

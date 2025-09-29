@@ -11,6 +11,7 @@ namespace WebAPI_simple.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BooksController : ControllerBase
     {
         private readonly AppDbContext _dbContext;
@@ -23,8 +24,9 @@ namespace WebAPI_simple.Controllers
         }
 
         [HttpGet("get-all-books")]
+        [Authorize(Roles ="Read")]
         public IActionResult GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery,
-        [FromQuery] string? sortBy, [FromQuery] bool isAscending,[FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
+        [FromQuery] string? sortBy, [FromQuery] bool isAscending,[FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 100)
         {
             // su dung reposity pattern 
             var allBooks = _bookRepository.GetAllBooks(filterOn, filterQuery, sortBy,
@@ -32,7 +34,9 @@ namespace WebAPI_simple.Controllers
             return Ok(allBooks);
         }
 
-        [HttpGet("get-book-by-id/{id}")]
+        [HttpGet]
+        [Route("get-book-by-id/{id}")]
+        [Authorize(Roles = "Read")]
         public IActionResult GetBookById([FromRoute] int id)
         {
             var bookWithIdDTO = _bookRepository.GetBookById(id);
@@ -45,7 +49,7 @@ namespace WebAPI_simple.Controllers
 
         [HttpPost("add-book")]
         [ValidateModelAttribute]
-        //[Authorize(Roles = "Write")]
+        [Authorize(Roles = "Write")]
         public IActionResult AddBook([FromBody] addBookRequestDTO addBookRequestDTO)
         {
             var publisherExists = _dbContext.Publishers.Any(p => p.Id == addBookRequestDTO.PublisherID);
@@ -64,6 +68,7 @@ namespace WebAPI_simple.Controllers
              return BadRequest(ModelState);
         }
         [HttpPost("and-book")]
+        [Authorize(Roles = "Read,Write")]
         public IActionResult AddBookNew([FromBody] addBookRequestDTO addBookRequestDTO)
         {
             if (ModelState.IsValid)
@@ -75,6 +80,7 @@ namespace WebAPI_simple.Controllers
         }
 
         [HttpPut("update-book-by-id/{id}")]
+        [Authorize(Roles = "Read,Write")]
         public IActionResult UpdateBookById([FromRoute] int id, [FromBody] addBookRequestDTO bookDTO)
         {
             var updateBook = _bookRepository.UpdateBookById(id, bookDTO);
@@ -86,6 +92,7 @@ namespace WebAPI_simple.Controllers
         }
 
         [HttpDelete("delete-book-by-id/{id}")]
+        [Authorize(Roles = "Read,Write")]
         public IActionResult DeleteBookById([FromRoute] int id)
         {
             var deleteBook = _bookRepository.DeleteBookById(id);

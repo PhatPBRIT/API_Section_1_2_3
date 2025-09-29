@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BookStoreApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6ca673e2a2f7989015721b0cf0645c8522d365d9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3e6f73eabdd32532d8f99b23c6be0f6601ec3c06")]
 [assembly: System.Reflection.AssemblyProductAttribute("BookStoreApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BookStoreApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
