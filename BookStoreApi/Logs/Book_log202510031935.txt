@@ -1,0 +1,14 @@
+2025-10-03 19:35:46.188 +07:00 [INF] User profile is available. Using 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-03 19:35:46.597 +07:00 [INF] Now listening on: https://localhost:7200
+2025-10-03 19:35:46.599 +07:00 [INF] Now listening on: http://localhost:5134
+2025-10-03 19:35:46.741 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-03 19:35:46.744 +07:00 [INF] Hosting environment: Development
+2025-10-03 19:35:46.745 +07:00 [INF] Content root path: D:\TKW2\API\BookStoreApi\BookStoreApi
+2025-10-03 19:35:49.535 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/swagger/index.html - null null
+2025-10-03 19:35:50.391 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/swagger/index.html - 200 null text/html;charset=utf-8 952.5359ms
+2025-10-03 19:35:50.426 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-03 19:35:50.445 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/_framework/aspnetcore-browser-refresh.js - 200 13760 application/javascript; charset=utf-8 18.5127ms
+2025-10-03 19:35:50.497 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/_vs/browserLink - null null
+2025-10-03 19:35:51.671 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/_vs/browserLink - 200 null text/javascript; charset=UTF-8 1174.9405ms
+2025-10-03 19:35:51.727 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7200/swagger/v1/swagger.json - null null
+2025-10-03 19:35:51.764 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7200/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 37.1166ms
